@@ -1,0 +1,140 @@
+// index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+    <div class="stopwatch-container">
+        <h1 id="stopwatch">00:00:00</h1>
+        <button id="start-button">Start</button>
+        <button id="stop-button" disabled>Stop</button>
+        <button id="reset-button">Reset</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+// Style.css
+
+body {
+    background-color: #8799eb; /* background color for entire page changed to blue */
+}
+
+.stopwatch-container {
+    text-align: center;
+    margin: 5px;
+}
+
+#stopwatch {
+    font-size: 100px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding: 1px;
+    border: 10px solid #cccccc;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight:bold;
+    cursor: pointer;
+}
+
+#start-button {
+    border: 1px solid #09dc2c; /* border for start button */
+    border-radius: 500px;
+}
+
+#stop-button {
+    border: 1px solid #ff3700; /* border for stop button */
+    border-radius: 500px;
+}
+
+#reset-button {
+    border: 1px solid #ccc; /* border for reset button */
+    border-radius: 500px;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+button:not(:disabled) {
+    background-color: #af4c90;
+    color: #fff;
+}
+
+button:not(:disabled):hover {
+    background-color: #85108e;
+}
+
+
+//script.js
+
+let seconds = 0;
+let minutes = 0;
+let hours = 0;
+let interval = null;
+let isRunning = false;
+
+const stopwatchElement = document.getElementById('stopwatch');
+const startButtonElement = document.getElementById('start-button');
+const stopButtonElement = document.getElementById('stop-button');
+const resetButtonElement = document.getElementById('reset-button');
+
+function updateStopwatch() {
+    seconds++;
+    if (seconds === 60) {
+        minutes++;
+        seconds = 0;
+    }
+    if (minutes === 60) {
+        hours++;
+        minutes = 0;
+    }
+
+    stopwatchElement.textContent = 
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function startStopwatch() {
+    if (!isRunning) {
+        interval = setInterval(updateStopwatch, 1000);
+        isRunning = true;
+        startButtonElement.disabled = true;
+        stopButtonElement.disabled = false;
+    }
+}
+
+function stopStopwatch() {
+    clearInterval(interval);
+    isRunning = false;
+    startButtonElement.disabled = false;
+    stopButtonElement.disabled = true;
+}
+
+function resetStopwatch() {
+    clearInterval(interval);
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+    stopwatchElement.textContent = "00:00:00";
+    isRunning = false;
+    startButtonElement.disabled = false;
+    stopButtonElement.disabled = true;
+}
+
+startButtonElement.addEventListener('click', startStopwatch);
+stopButtonElement.addEventListener('click', stopStopwatch);
+resetButtonElement.addEventListener('click', resetStopwatch);
